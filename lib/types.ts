@@ -1,4 +1,17 @@
 export type ContactStatus = 'lead' | 'prospect' | 'customer'
+
+export const PROPERTY_TYPES = [
+  { name: 'Perimetral',                   price: 1100400 },
+  { name: 'Perimetral Esquina',           price: 1142400 },
+  { name: 'Regular',                      price: 1155000 },
+  { name: 'Regular Esquina',              price: 1197000 },
+  { name: 'Preferencial',                 price: 1260000 },
+  { name: 'Preferencial Esquina',         price: 1302000 },
+  { name: 'Preferencial Premium',         price: 1365000 },
+  { name: 'Preferencial Premium Esquina', price: 1407000 },
+  { name: 'Comercial',                    price: 2830080 },
+  { name: 'Comercial Esquina',            price: 3113088 },
+] as const
 export type ActivityType = 'nota' | 'llamada' | 'email' | 'visita' | 'propuesta' | 'movimiento'
 
 export const STAGES = [

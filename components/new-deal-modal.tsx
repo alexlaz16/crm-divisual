@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { X } from 'lucide-react'
 import { createDeal } from '@/lib/actions/deals'
 import { getContacts } from '@/lib/actions/contacts'
-import { STAGES } from '@/lib/types'
+import { STAGES, PROPERTY_TYPES } from '@/lib/types'
 import type { Contact } from '@/lib/types'
 import { useToast } from './toast-provider'
 
@@ -82,10 +82,19 @@ export default function NewDealModal({ open, onClose }: Props) {
     setForm((f) => ({ ...f, [k]: v }))
   }
 
+  function handlePropertyChange(name: string) {
+    const pt = PROPERTY_TYPES.find((p) => p.name === name)
+    setForm((f) => ({
+      ...f,
+      propiedad: name,
+      valor: pt ? String(pt.price) : f.valor,
+    }))
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!form.cliente || !form.propiedad) {
-      toast('Completa cliente y propiedad')
+      toast('Completa cliente y tipo de lote')
       return
     }
     setLoading(true)
@@ -136,19 +145,29 @@ export default function NewDealModal({ open, onClose }: Props) {
             <div>
               <Label>Cliente *</Label>
               <ModalSelect value={form.cliente} onChange={(e) => set('cliente', e.target.value)}>
-                <option value="">Selecciona...</option>
+                <option value="">Selecciona contacto...</option>
                 {contacts.map((c) => (
                   <option key={c.id} value={c.name}>{c.name}</option>
                 ))}
               </ModalSelect>
             </div>
             <div>
-              <Label>Propiedad *</Label>
-              <ModalInput value={form.propiedad} onChange={(e) => set('propiedad', e.target.value)} placeholder="Ej. Villa Premium 24" />
+              <Label>Tipo de lote *</Label>
+              <ModalSelect value={form.propiedad} onChange={(e) => handlePropertyChange(e.target.value)}>
+                <option value="">Selecciona tipo...</option>
+                {PROPERTY_TYPES.map((p) => (
+                  <option key={p.name} value={p.name}>{p.name}</option>
+                ))}
+              </ModalSelect>
             </div>
             <div>
               <Label>Valor (USD)</Label>
-              <ModalInput type="number" value={form.valor} onChange={(e) => set('valor', e.target.value)} placeholder="850000" />
+              <ModalInput
+                type="number"
+                value={form.valor}
+                onChange={(e) => set('valor', e.target.value)}
+                placeholder="Se auto-llena al elegir lote"
+              />
             </div>
             <div>
               <Label>Agente</Label>

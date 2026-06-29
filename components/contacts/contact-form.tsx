@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { X } from 'lucide-react'
 import { createContact, updateContact } from '@/lib/actions/contacts'
 import type { Contact, ContactStatus } from '@/lib/types'
+import { PROPERTY_TYPES } from '@/lib/types'
 import { useToast } from '../toast-provider'
 
 const inputStyle: React.CSSProperties = {
@@ -151,8 +152,17 @@ export default function ContactForm({ contact, onClose, onSaved }: Props) {
             <Field label="Valor potencial (USD)">
               <FormInput type="number" value={form.valor} onChange={(e) => set('valor', e.target.value)} placeholder="850000" />
             </Field>
-            <Field label="Interés / Propiedad">
-              <FormInput value={form.interes} onChange={(e) => set('interes', e.target.value)} placeholder="Penthouse Marina" />
+            <Field label="Tipo de lote de interés">
+              <FormSelect value={form.interes} onChange={(e) => {
+                const pt = PROPERTY_TYPES.find((p) => p.name === e.target.value)
+                set('interes', e.target.value)
+                if (pt && !form.valor) set('valor', String(pt.price))
+              }}>
+                <option value="">Sin especificar</option>
+                {PROPERTY_TYPES.map((p) => (
+                  <option key={p.name} value={p.name}>{p.name}</option>
+                ))}
+              </FormSelect>
             </Field>
             <Field label="Agente">
               <FormSelect value={form.agente} onChange={(e) => set('agente', e.target.value)}>

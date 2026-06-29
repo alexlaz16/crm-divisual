@@ -1,14 +1,13 @@
 'use client'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { LayoutGrid, User, BarChart2, Building2, Plus, LogOut } from 'lucide-react'
+import { LayoutGrid, User, BarChart2, Plus, LogOut } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { cn } from '@/lib/utils'
 
 const NAV = [
   { key: 'dashboard', href: '/', label: 'Dashboard', Icon: LayoutGrid },
   { key: 'contacts', href: '/contacts', label: 'Contactos', Icon: User },
-  { key: 'companies', href: '/companies', label: 'Empresas', Icon: Building2 },
   { key: 'pipeline', href: '/pipeline', label: 'Pipeline', Icon: BarChart2 },
 ]
 
