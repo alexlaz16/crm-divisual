@@ -1,8 +1,8 @@
 [build]
-  command = "npm run build"
+  command = "node --version && npm --version && npm install && node -e \"console.log('node ok')\" && npm run build"
   publish = ".next"
 
 [build.environment]
   NODE_VERSION = "20"
   NEXT_TELEMETRY_DISABLED = "1"
-  NPM_FLAGS = "--legacy-peer-deps"
+  NODE_OPTIONS = "--max_old_space_size=2048"
