@@ -5,7 +5,7 @@ import { createContact, updateContact } from '@/lib/actions/contacts'
 import type { Contact, ContactStatus } from '@/lib/types'
 import { useToast } from '../toast-provider'
 
-const inputStyle = {
+const inputStyle: React.CSSProperties = {
   width: '100%',
   padding: '11px 13px',
   background: '#1A1A1A',
@@ -14,6 +14,30 @@ const inputStyle = {
   color: '#F5F5F5',
   fontSize: 13.5,
   outline: 'none',
+}
+
+function FormInput(p: React.InputHTMLAttributes<HTMLInputElement>) {
+  return (
+    <input
+      {...p}
+      style={inputStyle}
+      onFocus={(e) => (e.target.style.borderColor = 'rgba(250,197,28,0.5)')}
+      onBlur={(e) => (e.target.style.borderColor = 'rgba(255,255,255,0.1)')}
+    />
+  )
+}
+
+function FormSelect({ children, ...p }: React.SelectHTMLAttributes<HTMLSelectElement>) {
+  return (
+    <select
+      {...p}
+      style={inputStyle}
+      onFocus={(e) => (e.target.style.borderColor = 'rgba(250,197,28,0.5)')}
+      onBlur={(e) => (e.target.style.borderColor = 'rgba(255,255,255,0.1)')}
+    >
+      {children}
+    </select>
+  )
 }
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
@@ -87,25 +111,6 @@ export default function ContactForm({ contact, onClose, onSaved }: Props) {
     }
   }
 
-  const I = (p: React.InputHTMLAttributes<HTMLInputElement>) => (
-    <input
-      {...p}
-      style={inputStyle}
-      onFocus={(e) => (e.target.style.borderColor = 'rgba(250,197,28,0.5)')}
-      onBlur={(e) => (e.target.style.borderColor = 'rgba(255,255,255,0.1)')}
-    />
-  )
-  const Sel = ({ children, ...p }: React.SelectHTMLAttributes<HTMLSelectElement>) => (
-    <select
-      {...p}
-      style={inputStyle}
-      onFocus={(e) => (e.target.style.borderColor = 'rgba(250,197,28,0.5)')}
-      onBlur={(e) => (e.target.style.borderColor = 'rgba(255,255,255,0.1)')}
-    >
-      {children}
-    </select>
-  )
-
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-6"
@@ -127,39 +132,39 @@ export default function ContactForm({ contact, onClose, onSaved }: Props) {
           <div className="p-[26px] grid grid-cols-2 gap-[18px]">
             <div className="col-span-2">
               <Field label="Nombre *">
-                <I value={form.name} onChange={(e) => set('name', e.target.value)} placeholder="Mariana Vega" required />
+                <FormInput value={form.name} onChange={(e) => set('name', e.target.value)} placeholder="Mariana Vega" required />
               </Field>
             </div>
             <Field label="Email">
-              <I type="email" value={form.email} onChange={(e) => set('email', e.target.value)} placeholder="mariana@gmail.com" />
+              <FormInput type="email" value={form.email} onChange={(e) => set('email', e.target.value)} placeholder="mariana@gmail.com" />
             </Field>
             <Field label="Teléfono">
-              <I value={form.phone} onChange={(e) => set('phone', e.target.value)} placeholder="+52 33 1234 5678" />
+              <FormInput value={form.phone} onChange={(e) => set('phone', e.target.value)} placeholder="+52 33 1234 5678" />
             </Field>
             <Field label="Estado">
-              <Sel value={form.estado} onChange={(e) => set('estado', e.target.value as ContactStatus)}>
+              <FormSelect value={form.estado} onChange={(e) => set('estado', e.target.value as ContactStatus)}>
                 <option value="lead">Lead</option>
                 <option value="prospect">Prospecto</option>
                 <option value="customer">Cliente</option>
-              </Sel>
+              </FormSelect>
             </Field>
             <Field label="Valor potencial (USD)">
-              <I type="number" value={form.valor} onChange={(e) => set('valor', e.target.value)} placeholder="850000" />
+              <FormInput type="number" value={form.valor} onChange={(e) => set('valor', e.target.value)} placeholder="850000" />
             </Field>
             <Field label="Interés / Propiedad">
-              <I value={form.interes} onChange={(e) => set('interes', e.target.value)} placeholder="Penthouse Marina" />
+              <FormInput value={form.interes} onChange={(e) => set('interes', e.target.value)} placeholder="Penthouse Marina" />
             </Field>
             <Field label="Agente">
-              <Sel value={form.agente} onChange={(e) => set('agente', e.target.value)}>
+              <FormSelect value={form.agente} onChange={(e) => set('agente', e.target.value)}>
                 <option value="">Sin asignar</option>
                 {AGENTS.map((a) => <option key={a} value={a}>{a}</option>)}
-              </Sel>
+              </FormSelect>
             </Field>
             <Field label="Fuente">
-              <Sel value={form.fuente} onChange={(e) => set('fuente', e.target.value)}>
+              <FormSelect value={form.fuente} onChange={(e) => set('fuente', e.target.value)}>
                 <option value="">Desconocida</option>
                 {SOURCES.map((s) => <option key={s} value={s}>{s}</option>)}
-              </Sel>
+              </FormSelect>
             </Field>
           </div>
 

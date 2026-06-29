@@ -20,11 +20,26 @@ interface Props {
   initialDeals: Deal[]
 }
 
+function greeting() {
+  const h = new Date().getHours()
+  if (h < 12) return 'Buenos días'
+  if (h < 19) return 'Buenas tardes'
+  return 'Buenas noches'
+}
+
 export default function DashboardClient({ initialDeals }: Props) {
   const [deals, setDeals] = useState<Deal[]>(initialDeals)
+  const [userName, setUserName] = useState('')
 
   useEffect(() => {
     const supabase = createClient()
+
+    supabase.auth.getUser().then(({ data }) => {
+      const meta = data.user?.user_metadata
+      const name = meta?.full_name || meta?.name || data.user?.email?.split('@')[0] || ''
+      setUserName(name)
+    })
+
     const channel = supabase
       .channel('realtime-deals')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'deals' }, () => {
@@ -35,6 +50,7 @@ export default function DashboardClient({ initialDeals }: Props) {
           .then(({ data }) => { if (data) setDeals(data as Deal[]) })
       })
       .subscribe()
+
     return () => { supabase.removeChannel(channel) }
   }, [])
 
@@ -44,10 +60,10 @@ export default function DashboardClient({ initialDeals }: Props) {
   const closeRate = deals.length > 0 ? Math.round((closedDeals / deals.length) * 100) : 0
 
   const kpis = [
-    { label: 'Revenue Total', value: fmt(totalRevenue || 12400000), delta: '+18.2% este mes', sparkData: [4,5,4.5,6,5.5,7,6.5,8,9,8.5,10,11.5], Icon: DollarSign },
-    { label: 'Deals Activos', value: String(activeDeals || 28), delta: '+4 nuevos', sparkData: [18,20,19,22,21,24,23,25,26,25,27,28], Icon: Briefcase },
-    { label: 'Tasa de Cierre', value: `${closeRate || 34}%`, delta: '+2.1 pts', sparkData: [28,29,30,29,31,30,32,33,32,33,34,34], Icon: Percent },
-    { label: 'Próx. Actividades', value: '7', delta: '3 para hoy', sparkData: [3,5,4,6,5,7,6,8,5,7,6,7], Icon: Clock },
+    { label: 'Revenue Total', value: fmt(totalRevenue), delta: 'deals cerrados', sparkData: [4,5,4.5,6,5.5,7,6.5,8,9,8.5,10,11.5], Icon: DollarSign },
+    { label: 'Deals Activos', value: String(activeDeals), delta: 'en el pipeline', sparkData: [18,20,19,22,21,24,23,25,26,25,27,28], Icon: Briefcase },
+    { label: 'Tasa de Cierre', value: `${closeRate}%`, delta: 'sobre total de deals', sparkData: [28,29,30,29,31,30,32,33,32,33,34,34], Icon: Percent },
+    { label: 'Total de Deals', value: String(deals.length), delta: 'en tu cartera', sparkData: [3,5,4,6,5,7,6,8,5,7,6,7], Icon: Clock },
   ]
 
   return (
@@ -55,7 +71,9 @@ export default function DashboardClient({ initialDeals }: Props) {
       {/* Header */}
       <div className="flex items-end justify-between gap-5 mb-[30px]">
         <div>
-          <h1 className="text-[26px] font-semibold tracking-[-0.02em]">Buenos días, Patricia</h1>
+          <h1 className="text-[26px] font-semibold tracking-[-0.02em]">
+            {greeting()}{userName ? `, ${userName}` : ''}
+          </h1>
           <p className="mt-[6px] text-[13.5px]" style={{ color: 'rgba(245,245,245,0.45)' }}>
             {new Date().toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long' })} · resumen de tu cartera
           </p>
