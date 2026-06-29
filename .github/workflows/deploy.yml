@@ -1,4 +1,4 @@
-name: Build and Deploy to Netlify
+name: Build Test
 
 on:
   push:
@@ -15,7 +15,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
 
       - name: Install dependencies
         run: npm install --legacy-peer-deps
@@ -23,15 +22,7 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
-          NEXT_TELEMETRY_DISABLED: '1'
-          NODE_OPTIONS: '--max_old_space_size=4096'
-
-      - name: Deploy to Netlify
-        run: |
-          npm install -g netlify-cli --legacy-peer-deps
-          netlify deploy --prod --dir=.next --site=$NETLIFY_SITE_ID --auth=$NETLIFY_AUTH_TOKEN
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          NEXT_PUBLIC_SUPABASE_URL: "https://cuzxsiefsgkywfofqrwx.supabase.co"
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN1enhzaWVmc2dreXdmb2Zxcnd4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI2NDY2MDksImV4cCI6MjA5ODIyMjYwOX0.d66R7vXOmnCmtxh8EqFH9v1nxIXTrItIVypsSPoodVA"
+          NEXT_TELEMETRY_DISABLED: "1"
+          NODE_OPTIONS: "--max_old_space_size=4096"
