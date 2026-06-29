@@ -6,7 +6,7 @@ import KpiCard from './kpi-card'
 import PipelineSummary from './pipeline-summary'
 import RecentDeals from './recent-deals'
 import { fmt } from '@/lib/utils'
-import type { Deal, Activity } from '@/lib/types'
+import type { Deal } from '@/lib/types'
 
 const UPCOMING_STATIC = [
   { title: 'Visita · Penthouse Marina', who: 'Mariana Vega', time: 'Hoy 11:00', Icon: Home },

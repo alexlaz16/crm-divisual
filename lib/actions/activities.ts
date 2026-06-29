@@ -5,15 +5,12 @@ import type { Activity, ActivityType } from '../types'
 
 export async function getActivities(contactId?: string, dealId?: string) {
   const supabase = await createClient()
-  let q = supabase
-    .from('activities')
-    .select('*')
-    .order('created_at', { ascending: false })
+  let q = supabase.from('activities').select('*')
 
   if (contactId) q = q.eq('contact_id', contactId)
   if (dealId) q = q.eq('deal_id', dealId)
 
-  const { data, error } = await q
+  const { data, error } = await q.order('created_at', { ascending: false })
   if (error) throw error
   return (data ?? []) as Activity[]
 }

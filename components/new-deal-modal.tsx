@@ -103,7 +103,7 @@ export default function NewDealModal({ open, onClose }: Props) {
       toast('Deal creado en el pipeline ✓')
       onClose()
       setForm({ cliente: '', propiedad: '', valor: '', etapa: 'Nuevo Lead', prob: 50, agente: '', cierre: '', notas: '' })
-    } catch (err: unknown) {
+    } catch {
       toast('Error al crear deal')
     } finally {
       setLoading(false)

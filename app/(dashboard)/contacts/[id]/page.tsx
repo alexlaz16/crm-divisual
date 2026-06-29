@@ -1,10 +1,9 @@
 'use client'
-import { useEffect, useState, useTransition } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { ChevronLeft, Phone, Mail, Calendar, Edit2, Trash2 } from 'lucide-react'
-import { getContact } from '@/lib/actions/contacts'
+import { getContact, deleteContact } from '@/lib/actions/contacts'
 import { getActivities } from '@/lib/actions/activities'
-import { deleteContact } from '@/lib/actions/contacts'
 import ActivityTimeline from '@/components/activities/timeline'
 import StatusBadge from '@/components/contacts/status-badge'
 import ContactForm from '@/components/contacts/contact-form'
@@ -19,7 +18,7 @@ export default function ContactDetailPage() {
   const [contact, setContact] = useState<Contact | null>(null)
   const [activities, setActivities] = useState<Activity[]>([])
   const [showEdit, setShowEdit] = useState(false)
-  const [isPending, startTransition] = useTransition()
+  const [isPending, setIsPending] = useState(false)
 
   async function load() {
     try {
@@ -31,19 +30,20 @@ export default function ContactDetailPage() {
     }
   }
 
-  useEffect(() => { load() }, [id])
+  useEffect(() => { load() }, [id]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  function handleDelete() {
+  async function handleDelete() {
     if (!confirm('¿Eliminar este contacto? Esta acción no se puede deshacer.')) return
-    startTransition(async () => {
-      try {
-        await deleteContact(id)
-        toast('Contacto eliminado')
-        router.push('/contacts')
-      } catch {
-        toast('Error al eliminar contacto')
-      }
-    })
+    setIsPending(true)
+    try {
+      await deleteContact(id)
+      toast('Contacto eliminado')
+      router.push('/contacts')
+    } catch {
+      toast('Error al eliminar contacto')
+    } finally {
+      setIsPending(false)
+    }
   }
 
   if (!contact) {
@@ -128,7 +128,7 @@ export default function ContactDetailPage() {
               { label: 'Fuente', value: contact.fuente },
             ].map(({ label, value }) => (
               <div key={label}>
-                <div className="text-[10.5px] uppercase tracking-[0.1em]  mb-[5px]" style={{ color: 'rgba(245,245,245,0.4)' }}>{label}</div>
+                <div className="text-[10.5px] uppercase tracking-[0.1em] mb-[5px]" style={{ color: 'rgba(245,245,245,0.4)' }}>{label}</div>
                 <div className="text-sm truncate">{value ?? '—'}</div>
               </div>
             ))}
@@ -140,7 +140,6 @@ export default function ContactDetailPage() {
           <ActivityTimeline activities={activities} contactId={id} />
 
           <div className="flex flex-col gap-[18px]">
-            {/* Deal details */}
             <div className="rounded-2xl p-6" style={{ background: '#111111', border: '1px solid rgba(255,255,255,0.06)' }}>
               <h2 className="text-[15px] font-semibold mb-[18px]">Detalles del deal</h2>
               <div className="flex flex-col gap-[15px]">

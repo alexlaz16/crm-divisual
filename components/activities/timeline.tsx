@@ -1,5 +1,5 @@
 'use client'
-import { useState, useTransition } from 'react'
+import { useState } from 'react'
 import { Home, Phone, Mail, FileText, FileCheck, ArrowRight, StickyNote } from 'lucide-react'
 import { addActivity } from '@/lib/actions/activities'
 import type { Activity } from '@/lib/types'
@@ -32,20 +32,21 @@ export default function ActivityTimeline({ activities, contactId }: Props) {
   const toast = useToast()
   const router = useRouter()
   const [note, setNote] = useState('')
-  const [isPending, startTransition] = useTransition()
+  const [isPending, setIsPending] = useState(false)
 
-  function handleAdd() {
+  async function handleAdd() {
     if (!note.trim()) return
-    startTransition(async () => {
-      try {
-        await addActivity({ contact_id: contactId, title: 'Nota', description: note.trim(), type: 'nota', gold: false })
-        setNote('')
-        toast('Nota añadida ✓')
-        router.refresh()
-      } catch {
-        toast('Error al añadir nota')
-      }
-    })
+    setIsPending(true)
+    try {
+      await addActivity({ contact_id: contactId, title: 'Nota', description: note.trim(), type: 'nota', gold: false })
+      setNote('')
+      toast('Nota añadida ✓')
+      router.refresh()
+    } catch {
+      toast('Error al añadir nota')
+    } finally {
+      setIsPending(false)
+    }
   }
 
   return (
