@@ -105,11 +105,11 @@ export default function DashboardClient({ initialDeals }: Props) {
   ]
 
   return (
-    <div className="h-full overflow-y-auto px-11 py-[34px] pb-12">
+    <div className="h-full overflow-y-auto px-4 py-6 pb-8 sm:px-11 sm:py-[34px] sm:pb-12">
       {/* Header */}
-      <div className="flex items-end justify-between gap-5 mb-[30px]">
+      <div className="flex items-end justify-between gap-5 mb-6 sm:mb-[30px]">
         <div>
-          <h1 className="text-[26px] font-semibold tracking-[-0.02em]">
+          <h1 className="text-2xl sm:text-[26px] font-semibold tracking-[-0.02em]">
             {greeting()}{userName ? `, ${userName}` : ''}
           </h1>
           <p className="mt-[6px] text-[13.5px]" style={{ color: 'rgba(245,245,245,0.45)' }}>
@@ -119,14 +119,14 @@ export default function DashboardClient({ initialDeals }: Props) {
       </div>
 
       {/* KPIs */}
-      <div className="grid grid-cols-4 gap-[18px] mb-[18px]">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-[18px] mb-4 sm:mb-[18px]">
         {kpis.map((k) => (
           <KpiCard key={k.label} label={k.label} value={k.value} delta={k.delta} sparkData={k.sparkData} Icon={k.Icon} />
         ))}
       </div>
 
       {/* Pipeline + Actividades */}
-      <div className="grid gap-[18px] mb-[18px]" style={{ gridTemplateColumns: '1.45fr 1fr' }}>
+      <div className="grid gap-4 sm:gap-[18px] mb-4 sm:mb-[18px] grid-cols-1 lg:grid-cols-[1.45fr_1fr]">
         <PipelineSummary deals={deals} />
 
         <div className="rounded-2xl p-6" style={{ background: '#111111', border: '1px solid rgba(255,255,255,0.06)' }}>

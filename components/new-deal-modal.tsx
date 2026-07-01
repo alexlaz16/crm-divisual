@@ -161,7 +161,7 @@ export default function NewDealModal({ open, onClose }: Props) {
               </ModalSelect>
             </div>
             <div>
-              <Label>Valor (USD)</Label>
+              <Label>Valor (MXN)</Label>
               <ModalInput
                 type="number"
                 value={form.valor}

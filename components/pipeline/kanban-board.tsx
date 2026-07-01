@@ -75,16 +75,17 @@ export default function KanbanBoard({ initialDeals, onOpenDeal }: Props) {
   return (
     <div className="h-full flex flex-col overflow-hidden">
       {/* Header */}
-      <div className="flex items-end justify-between gap-5 px-11 pt-[34px] pb-[22px]">
+      <div className="flex items-end justify-between gap-5 px-4 pt-6 pb-4 sm:px-11 sm:pt-[34px] sm:pb-[22px]">
         <div>
-          <h1 className="text-[26px] font-semibold tracking-[-0.02em]">Pipeline</h1>
+          <h1 className="text-2xl sm:text-[26px] font-semibold tracking-[-0.02em]">Pipeline</h1>
           <p className="text-[13.5px] mt-[6px]" style={{ color: 'rgba(245,245,245,0.45)' }}>
-            {deals.length} deals · {fmt(totalPipeline)} en pipeline · arrastra las tarjetas entre etapas
+            {deals.length} deals · {fmt(totalPipeline)} en pipeline
+            <span className="hidden sm:inline"> · arrastra las tarjetas entre etapas</span>
           </p>
         </div>
         <button
           onClick={onOpenDeal}
-          className="flex items-center gap-2 px-[18px] py-[11px] rounded-[10px] text-sm font-semibold text-bg"
+          className="flex items-center gap-2 px-3 sm:px-[18px] py-[11px] rounded-[10px] text-sm font-semibold text-bg"
           style={{ background: '#FAC51C' }}
           onMouseEnter={(e) => (e.currentTarget.style.background = '#FFD23F')}
           onMouseLeave={(e) => (e.currentTarget.style.background = '#FAC51C')}
@@ -95,7 +96,7 @@ export default function KanbanBoard({ initialDeals, onOpenDeal }: Props) {
 
       {/* Board */}
       <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-        <div className="flex-1 flex gap-4 overflow-x-auto px-11 pb-[34px] pt-1 items-start">
+        <div className="flex-1 flex gap-3 sm:gap-4 overflow-x-auto px-3 pb-4 sm:px-11 sm:pb-[34px] pt-1 items-start">
           {STAGES.map((stage) => (
             <KanbanColumn
               key={stage}

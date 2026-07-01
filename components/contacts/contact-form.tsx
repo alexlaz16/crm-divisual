@@ -59,7 +59,7 @@ interface Props {
 }
 
 const AGENTS = ['Patricia Lara', 'Hugo Méndez', 'Camila Soto']
-const SOURCES = ['Referido', 'Web', 'Instagram', 'Portal', 'Evento', 'Otro']
+const SOURCES = ['Instagram', 'TikTok', 'Recomendados', 'Restaurante']
 
 export default function ContactForm({ contact, onClose, onSaved }: Props) {
   const toast = useToast()
@@ -149,7 +149,7 @@ export default function ContactForm({ contact, onClose, onSaved }: Props) {
                 <option value="customer">Cliente</option>
               </FormSelect>
             </Field>
-            <Field label="Valor potencial (USD)">
+            <Field label="Valor potencial (MXN)">
               <FormInput type="number" value={form.valor} onChange={(e) => set('valor', e.target.value)} placeholder="850000" />
             </Field>
             <Field label="Tipo de lote de interés">

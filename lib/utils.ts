@@ -13,7 +13,7 @@ export function fmt(n: number): string {
 }
 
 export function fmtFull(n: number): string {
-  return '$' + Number(n).toLocaleString('en-US')
+  return '$' + Number(n).toLocaleString('es-MX')
 }
 
 export function initials(name: string): string {

@@ -83,12 +83,12 @@ export default function ContactsTable({ contacts }: { contacts: Contact[] }) {
 
   return (
     <>
-      <div className="h-full overflow-y-auto px-11 py-[34px] pb-12">
+      <div className="h-full overflow-y-auto px-4 py-6 pb-8 sm:px-11 sm:py-[34px] sm:pb-12">
         <div className="flex items-start justify-between gap-4 mb-1">
-          <h1 className="text-[26px] font-semibold tracking-[-0.02em]">Contactos</h1>
+          <h1 className="text-2xl sm:text-[26px] font-semibold tracking-[-0.02em]">Contactos</h1>
           <button
             onClick={() => setShowForm(true)}
-            className="flex items-center gap-2 px-4 py-[10px] rounded-[10px] text-sm font-semibold text-bg"
+            className="flex items-center gap-2 px-3 sm:px-4 py-[10px] rounded-[10px] text-sm font-semibold text-bg whitespace-nowrap"
             style={{ background: '#FAC51C' }}
             onMouseEnter={(e) => (e.currentTarget.style.background = '#FFD23F')}
             onMouseLeave={(e) => (e.currentTarget.style.background = '#FAC51C')}
@@ -101,8 +101,8 @@ export default function ContactsTable({ contacts }: { contacts: Contact[] }) {
         </p>
 
         {/* Toolbar */}
-        <div className="flex items-center justify-between gap-4 mb-[18px] flex-wrap">
-          <div className="relative w-[340px] max-w-[46vw]">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-[18px]">
+          <div className="relative w-full sm:w-[340px]">
             <Search size={16} className="absolute left-[14px] top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: 'rgba(245,245,245,0.4)' }} />
             <input
               value={search}
@@ -136,8 +136,8 @@ export default function ContactsTable({ contacts }: { contacts: Contact[] }) {
           </div>
         </div>
 
-        {/* Table */}
-        <div className="rounded-2xl overflow-hidden" style={{ background: '#111111', border: '1px solid rgba(255,255,255,0.06)' }}>
+        {/* Table — desktop only */}
+        <div className="hidden sm:block rounded-2xl overflow-hidden" style={{ background: '#111111', border: '1px solid rgba(255,255,255,0.06)' }}>
           <div
             className="grid gap-3 px-[18px] py-[14px]"
             style={{ gridTemplateColumns: 'minmax(200px,1.8fr) 130px 1.3fr 120px 1.2fr 110px', background: 'rgba(255,255,255,0.015)' }}
@@ -183,6 +183,46 @@ export default function ContactsTable({ contacts }: { contacts: Contact[] }) {
 
           {list.length === 0 && (
             <div className="py-12 text-center text-[13.5px]" style={{ color: 'rgba(245,245,245,0.4)', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+              Sin resultados para tu búsqueda.
+            </div>
+          )}
+        </div>
+
+        {/* Mobile cards */}
+        <div className="sm:hidden flex flex-col gap-3">
+          {list.map((c) => (
+            <div
+              key={c.id}
+              onClick={() => router.push(`/contacts/${c.id}`)}
+              className="flex items-center gap-3 p-4 rounded-2xl cursor-pointer active:bg-white/[0.04]"
+              style={{ background: '#111111', border: '1px solid rgba(255,255,255,0.06)' }}
+            >
+              <div
+                className="w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center text-sm font-semibold"
+                style={{
+                  background: '#1A1A1A',
+                  border: `1px solid ${c.estado === 'customer' ? 'rgba(250,197,28,0.5)' : 'rgba(255,255,255,0.1)'}`,
+                  color: 'rgba(245,245,245,0.85)',
+                }}
+              >
+                {initials(c.name)}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between gap-2 mb-1">
+                  <span className="text-sm font-semibold truncate">{c.name}</span>
+                  <span className="text-sm font-semibold tabular-nums flex-shrink-0">{fmt(c.valor)}</span>
+                </div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <StatusBadge status={c.estado} />
+                  {c.interes && (
+                    <span className="text-[11.5px] truncate" style={{ color: 'rgba(245,245,245,0.5)' }}>{c.interes}</span>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
+          {list.length === 0 && (
+            <div className="py-12 text-center text-[13.5px]" style={{ color: 'rgba(245,245,245,0.4)' }}>
               Sin resultados para tu búsqueda.
             </div>
           )}
