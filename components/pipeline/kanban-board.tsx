@@ -18,6 +18,7 @@ import { STAGES } from '@/lib/types'
 import { fmt } from '@/lib/utils'
 import type { Deal, Stage } from '@/lib/types'
 import { useToast } from '../toast-provider'
+import { useRole } from '../role-provider'
 
 interface Props {
   initialDeals: Deal[]
@@ -26,6 +27,7 @@ interface Props {
 
 export default function KanbanBoard({ initialDeals, onOpenDeal }: Props) {
   const toast = useToast()
+  const role = useRole()
   const [deals, setDeals] = useState<Deal[]>(initialDeals)
   const [activeId, setActiveId] = useState<string | null>(null)
 
@@ -57,6 +59,7 @@ export default function KanbanBoard({ initialDeals, onOpenDeal }: Props) {
     const { active, over } = event
     setActiveId(null)
     if (!over || active.id === over.id) return
+    if (role !== 'admin') return
 
     const newStage = String(over.id) as Stage
     if (!STAGES.includes(newStage)) return
@@ -83,15 +86,17 @@ export default function KanbanBoard({ initialDeals, onOpenDeal }: Props) {
             <span className="hidden sm:inline"> · arrastra las tarjetas entre etapas</span>
           </p>
         </div>
-        <button
-          onClick={onOpenDeal}
-          className="flex items-center gap-2 px-3 sm:px-[18px] py-[11px] rounded-[10px] text-sm font-semibold text-bg"
-          style={{ background: '#FAC51C' }}
-          onMouseEnter={(e) => (e.currentTarget.style.background = '#FFD23F')}
-          onMouseLeave={(e) => (e.currentTarget.style.background = '#FAC51C')}
-        >
-          <Plus size={16} strokeWidth={2} /> Nuevo Deal
-        </button>
+        {role === 'admin' && (
+          <button
+            onClick={onOpenDeal}
+            className="flex items-center gap-2 px-3 sm:px-[18px] py-[11px] rounded-[10px] text-sm font-semibold text-bg"
+            style={{ background: '#FAC51C' }}
+            onMouseEnter={(e) => (e.currentTarget.style.background = '#FFD23F')}
+            onMouseLeave={(e) => (e.currentTarget.style.background = '#FAC51C')}
+          >
+            <Plus size={16} strokeWidth={2} /> Nuevo Deal
+          </button>
+        )}
       </div>
 
       {/* Board */}

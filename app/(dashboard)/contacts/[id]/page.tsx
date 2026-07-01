@@ -9,12 +9,14 @@ import StatusBadge from '@/components/contacts/status-badge'
 import ContactForm from '@/components/contacts/contact-form'
 import { fmtFull, initials } from '@/lib/utils'
 import { useToast } from '@/components/toast-provider'
+import { useRole } from '@/components/role-provider'
 import type { Contact, Activity } from '@/lib/types'
 
 export default function ContactDetailPage() {
   const { id } = useParams<{ id: string }>()
   const router = useRouter()
   const toast = useToast()
+  const role = useRole()
   const [contact, setContact] = useState<Contact | null>(null)
   const [activities, setActivities] = useState<Activity[]>([])
   const [showEdit, setShowEdit] = useState(false)
@@ -58,7 +60,7 @@ export default function ContactDetailPage() {
 
   return (
     <>
-      <div className="h-full overflow-y-auto px-11 py-7 pb-12">
+      <div className="h-full overflow-y-auto px-4 py-6 pb-8 sm:px-11 sm:py-7 sm:pb-12">
         {/* Back */}
         <button
           onClick={() => router.push('/contacts')}
@@ -70,7 +72,7 @@ export default function ContactDetailPage() {
         </button>
 
         {/* Header card */}
-        <div className="rounded-2xl p-[26px] mb-[18px]" style={{ background: '#111111', border: '1px solid rgba(255,255,255,0.06)' }}>
+        <div className="rounded-2xl p-5 sm:p-[26px] mb-[18px]" style={{ background: '#111111', border: '1px solid rgba(255,255,255,0.06)' }}>
           <div className="flex items-start gap-5 flex-wrap">
             <div
               className="w-[68px] h-[68px] rounded-full flex-shrink-0 flex items-center justify-center text-[22px] font-semibold"
@@ -101,26 +103,30 @@ export default function ContactDetailPage() {
                   <Icon size={15} strokeWidth={1.5} /> {label}
                 </button>
               ))}
-              <button
-                onClick={() => setShowEdit(true)}
-                className="flex items-center gap-[7px] px-[14px] py-[9px] rounded-[9px] text-[12.5px] font-medium transition-colors hover:border-accent/50"
-                style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.12)', color: '#F5F5F5' }}
-              >
-                <Edit2 size={15} strokeWidth={1.5} /> Editar
-              </button>
-              <button
-                onClick={handleDelete}
-                disabled={isPending}
-                className="flex items-center gap-[7px] px-[14px] py-[9px] rounded-[9px] text-[12.5px] font-medium transition-colors"
-                style={{ background: 'transparent', border: '1px solid rgba(239,68,68,0.3)', color: '#f87171' }}
-              >
-                <Trash2 size={15} strokeWidth={1.5} /> Eliminar
-              </button>
+              {role === 'admin' && (
+                <>
+                  <button
+                    onClick={() => setShowEdit(true)}
+                    className="flex items-center gap-[7px] px-[14px] py-[9px] rounded-[9px] text-[12.5px] font-medium transition-colors hover:border-accent/50"
+                    style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.12)', color: '#F5F5F5' }}
+                  >
+                    <Edit2 size={15} strokeWidth={1.5} /> Editar
+                  </button>
+                  <button
+                    onClick={handleDelete}
+                    disabled={isPending}
+                    className="flex items-center gap-[7px] px-[14px] py-[9px] rounded-[9px] text-[12.5px] font-medium transition-colors"
+                    style={{ background: 'transparent', border: '1px solid rgba(239,68,68,0.3)', color: '#f87171' }}
+                  >
+                    <Trash2 size={15} strokeWidth={1.5} /> Eliminar
+                  </button>
+                </>
+              )}
             </div>
           </div>
 
           {/* Fields */}
-          <div className="grid grid-cols-4 gap-[18px] mt-6 pt-[22px]" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-[18px] mt-6 pt-[22px]" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
             {[
               { label: 'Email', value: contact.email },
               { label: 'Teléfono', value: contact.phone },
@@ -136,7 +142,7 @@ export default function ContactDetailPage() {
         </div>
 
         {/* Body: timeline + deal facts */}
-        <div className="grid gap-[18px] items-start" style={{ gridTemplateColumns: '1.5fr 1fr' }}>
+        <div className="grid gap-[18px] items-start grid-cols-1 lg:grid-cols-[1.5fr_1fr]">
           <ActivityTimeline activities={activities} contactId={id} />
 
           <div className="flex flex-col gap-[18px]">
@@ -166,7 +172,7 @@ export default function ContactDetailPage() {
         </div>
       </div>
 
-      {showEdit && (
+      {showEdit && role === 'admin' && (
         <ContactForm
           contact={contact}
           onClose={() => setShowEdit(false)}

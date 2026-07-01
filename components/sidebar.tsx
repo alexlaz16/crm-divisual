@@ -1,8 +1,9 @@
 'use client'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { LayoutGrid, User, BarChart2, Plus, LogOut } from 'lucide-react'
+import { LayoutGrid, User, BarChart2, Plus, LogOut, Shield } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+import { useRole } from './role-provider'
 import { cn } from '@/lib/utils'
 
 const NAV = [
@@ -19,6 +20,7 @@ interface Props {
 export default function Sidebar({ onOpenDeal, userEmail }: Props) {
   const pathname = usePathname()
   const router = useRouter()
+  const role = useRole()
 
   async function logout() {
     const supabase = createClient()
@@ -79,21 +81,43 @@ export default function Sidebar({ onOpenDeal, userEmail }: Props) {
             </Link>
           )
         })}
+        {role === 'admin' && (() => {
+          const active = isActive('/admin')
+          return (
+            <Link
+              href="/admin"
+              className={cn(
+                'flex items-center gap-[13px] w-full px-[13px] py-[11px] rounded-[10px] text-[13.5px] font-medium transition-colors',
+                active ? 'text-accent' : 'hover:bg-white/[0.04]',
+              )}
+              style={{
+                background: active ? 'rgba(250,197,28,0.06)' : undefined,
+                color: active ? '#FAC51C' : 'rgba(245,245,245,0.55)',
+                borderLeft: `2px solid ${active ? '#FAC51C' : 'transparent'}`,
+              }}
+            >
+              <Shield size={18} />
+              Usuarios
+            </Link>
+          )
+        })()}
       </nav>
 
       <div className="flex-1" />
 
-      {/* New Deal CTA */}
-      <button
-        onClick={onOpenDeal}
-        className="flex items-center justify-center gap-2 w-full py-3 rounded-[10px] font-semibold text-[13.5px] text-bg mb-4 transition-colors"
-        style={{ background: '#FAC51C' }}
-        onMouseEnter={(e) => (e.currentTarget.style.background = '#FFD23F')}
-        onMouseLeave={(e) => (e.currentTarget.style.background = '#FAC51C')}
-      >
-        <Plus size={17} strokeWidth={2} />
-        Nuevo Deal
-      </button>
+      {/* New Deal CTA — only for admins */}
+      {role === 'admin' && (
+        <button
+          onClick={onOpenDeal}
+          className="flex items-center justify-center gap-2 w-full py-3 rounded-[10px] font-semibold text-[13.5px] text-bg mb-4 transition-colors"
+          style={{ background: '#FAC51C' }}
+          onMouseEnter={(e) => (e.currentTarget.style.background = '#FFD23F')}
+          onMouseLeave={(e) => (e.currentTarget.style.background = '#FAC51C')}
+        >
+          <Plus size={17} strokeWidth={2} />
+          Nuevo Deal
+        </button>
+      )}
 
       {/* User */}
       <div

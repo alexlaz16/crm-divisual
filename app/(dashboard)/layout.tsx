@@ -7,6 +7,7 @@ import ToastProvider from '@/components/toast-provider'
 import CrmProvider, { useCrm } from '@/components/crm-context'
 import PushPermission from '@/components/push-permission'
 import NotificationChecker from '@/components/notification-checker'
+import RoleProvider from '@/components/role-provider'
 import { createClient } from '@/lib/supabase/client'
 
 function Inner({ children }: { children: React.ReactNode }) {
@@ -79,7 +80,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   return (
     <ToastProvider>
       <CrmProvider>
-        <Inner>{children}</Inner>
+        <RoleProvider>
+          <Inner>{children}</Inner>
+        </RoleProvider>
       </CrmProvider>
     </ToastProvider>
   )
