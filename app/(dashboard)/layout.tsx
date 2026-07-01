@@ -5,6 +5,8 @@ import Sidebar from '@/components/sidebar'
 import NewDealModal from '@/components/new-deal-modal'
 import ToastProvider from '@/components/toast-provider'
 import CrmProvider, { useCrm } from '@/components/crm-context'
+import PushPermission from '@/components/push-permission'
+import NotificationChecker from '@/components/notification-checker'
 import { createClient } from '@/lib/supabase/client'
 
 function Inner({ children }: { children: React.ReactNode }) {
@@ -67,6 +69,8 @@ function Inner({ children }: { children: React.ReactNode }) {
       </main>
 
       <NewDealModal open={dealModalOpen} onClose={closeDealModal} />
+      <PushPermission />
+      <NotificationChecker />
     </div>
   )
 }
